@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>DMCMS | Dashboard</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #f4f7f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: #16324f;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+
+        .navbar .nav-link {
+            color: #dce6ef !important;
+            margin-left: 10px;
+        }
+
+        .navbar .nav-link:hover {
+            color: white !important;
+        }
+
+        .dashboard-title {
+            margin-top: 40px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #16324f;
+        }
+
+        .dashboard-subtitle {
+            color: #6c757d;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            border: none;
+            border-radius: 15px;
+            padding: 25px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-icon {
+            font-size: 35px;
+            margin-bottom: 10px;
+        }
+
+        .stat-title {
+            color: #6c757d;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #16324f;
+        }
+
+        .quick-actions {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .quick-actions h4 {
+            color: #16324f;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .action-card {
+            background: white;
+            border: none;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: 100%;
+        }
+
+        .action-card h5 {
+            color: #16324f;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            background: #16324f;
+            color: white;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg">
+
+    <div class="container">
+
+        <a class="navbar-brand"
+           href="/dashboard">
+
+            🐭 DMCMS
+
+        </a>
+
+
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <div
+                class="collapse navbar-collapse"
+                id="navbarContent">
+
+            <ul class="navbar-nav ms-auto">
+
+
+                <!-- DASHBOARD -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/dashboard">
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+
+                <!-- MICE -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/mice">
+
+                        Mice
+
+                    </a>
+
+                </li>
+
+
+                <!-- COLONIES -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/colonies">
+
+                        Colonies
+
+                    </a>
+
+                </li>
+
+
+                <!-- CAGES -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="/cages">
+
+                        Cages
+
+                    </a>
+
+                </li>
+
+
+                <!-- ADMIN MEMBERS -->
+
+                <li class="nav-item"
+                    th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+
+                    <a class="nav-link"
+                       href="/admin/members">
+
+                        👥 Members
+
+                    </a>
+
+                </li>
+
+
+                <!-- LOGOUT -->
+
+                <li class="nav-item">
+
+                    <form
+                            th:action="@{/logout}"
+                            method="post"
+                            style="display:inline;">
+
+                        <button
+                                type="submit"
+                                class="btn btn-outline-light ms-3">
+
+                            Logout
+
+                        </button>
+
+                    </form>
+
+                </li>
+
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="container">
+
+
+    <h1 class="dashboard-title">
+
+        Digital Mouse Colony Management System
+
+    </h1>
+
+
+    <p class="dashboard-subtitle">
+
+        Laboratory management dashboard
+
+    </p>
+
+
+    <!-- STATISTICS -->
+
+    <div class="row g-4">
+
+
+        <!-- MICE -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <a href="/mice"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        🐭
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Total Mice
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalMice}">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- COLONIES -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <a href="/colonies"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        🧬
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Total Colonies
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalColonies}">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- CAGES -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <a href="/cages"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        🏠
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Total Cages
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalCages}">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- EXPERIMENTS -->
+
+        <div class="col-md-6 col-lg-3">
+
+            <a href="/experiments"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        🧪
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Experiments
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalExperiments}">
+
+                        0
+
+                    </div>
+
+                    <small class="text-primary">
+
+                        View Experiments →
+
+                    </small>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- BREEDING -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <a href="/breeding"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        ❤️
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Breeding Records
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalBreedingRecords}">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- HEALTH -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <a href="/health"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        🩺
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Health Records
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalHealthRecords}">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- INVENTORY -->
+
+        <div class="col-md-6 col-lg-4">
+
+            <a href="/inventory"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        📦
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Inventory Items
+
+                    </div>
+
+                    <div
+                            class="stat-number"
+                            th:text="${totalInventoryItems}">
+
+                        0
+
+                    </div>
+
+                    <small class="text-primary">
+
+                        View Inventory →
+
+                    </small>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- ADMIN MEMBERS CARD -->
+
+        <div class="col-md-6 col-lg-4"
+             th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+
+            <a href="/admin/members"
+               class="text-decoration-none">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        👥
+
+                    </div>
+
+                    <div class="stat-title">
+
+                        Members
+
+                    </div>
+
+                    <div class="stat-number">
+
+                        👤
+
+                    </div>
+
+                    <small class="text-primary">
+
+                        View Members →
+
+                    </small>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="quick-actions">
+
+        <h4>
+
+            Quick Actions
+
+        </h4>
+
+
+        <div class="row g-4">
+
+
+            <!-- ADD MOUSE -->
+
+            <div class="col-md-4">
+
+                <div class="action-card">
+
+                    <h5>
+
+                        🐭 Mouse Management
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Add and manage laboratory mice.
+
+                    </p>
+
+                    <a
+                            href="/mice/add"
+                            class="btn btn-primary">
+
+                        Add Mouse
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADD COLONY -->
+
+            <div class="col-md-4">
+
+                <div class="action-card">
+
+                    <h5>
+
+                        🧬 Colony Management
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Create and manage mouse colonies.
+
+                    </p>
+
+                    <a
+                            href="/colonies/add"
+                            class="btn btn-success">
+
+                        Add Colony
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADD CAGE -->
+
+            <div class="col-md-4">
+
+                <div class="action-card">
+
+                    <h5>
+
+                        🏠 Cage Management
+
+                    </h5>
+
+                    <p class="text-muted">
+
+                        Manage laboratory cages.
+
+                    </p>
+
+                    <a
+                            href="/cages/add"
+                            class="btn btn-warning">
+
+                        Add Cage
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+    Digital Mouse Colony Management System
+
+    <br>
+
+    Laboratory Management Platform
+
+</div>
+
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>DMCMS | Inventory</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <style>
+
+        body {
+            background-color: #f4f7f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: #16324f;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+
+        .navbar .nav-link {
+            color: #dce6ef !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: white !important;
+        }
+
+        .page-title {
+            margin-top: 40px;
+            color: #16324f;
+            font-weight: bold;
+        }
+
+        .table-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-top: 25px;
+        }
+
+        .table th {
+            background-color: #16324f;
+            color: white;
+        }
+
+        .low-stock {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg" style="background:#16324f;">
+
+    <div class="container">
+
+        <!-- Logo / Brand -->
+        <a class="navbar-brand fw-bold text-white"
+           href="/dashboard">
+
+            🐭 DMCMS
+
+        </a>
+
+        <!-- Navigation Links -->
+        <div class="navbar-nav ms-auto">
+
+            <a class="nav-link text-white"
+               href="/dashboard">
+
+                Dashboard
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/mice">
+
+                Mice
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/colonies">
+
+                Colonies
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/cages">
+
+                Cages
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/breeding">
+
+                Breeding
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/health">
+
+                Health
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/inventory">
+
+                Inventory
+
+            </a>
+
+            <a class="nav-link text-white"
+               href="/experiments">
+
+                Experiments
+
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <h1 class="page-title">
+            Inventory
+        </h1>
+
+        <a href="/inventory/add"
+           class="btn btn-primary">
+
+            + Add Item
+
+        </a>
+
+    </div>
+
+
+    <div class="table-container">
+
+        <table class="table table-hover align-middle">
+
+            <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Item Name</th>
+
+                <th>Quantity</th>
+
+                <th>Minimum Quantity</th>
+
+                <th>Unit</th>
+
+                <th>Stock Status</th>
+
+                <th>Action</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+
+            <tr th:each="item : ${items}">
+
+                <td th:text="${item.id}">
+                    1
+                </td>
+
+                <td th:text="${item.itemName}">
+                    Gloves
+                </td>
+
+                <td th:text="${item.quantity}">
+                    50
+                </td>
+
+                <td th:text="${item.minimumQuantity}">
+                    10
+                </td>
+
+                <td th:text="${item.unit}">
+                    Boxes
+                </td>
+
+                <td>
+
+                    <span
+                            th:if="${item.quantity != null
+                            and item.minimumQuantity != null
+                            and item.quantity <= item.minimumQuantity}"
+                            class="low-stock">
+
+                        Low Stock
+
+                    </span>
+
+                    <span
+                            th:if="${item.quantity == null
+                            or item.minimumQuantity == null
+                            or item.quantity > item.minimumQuantity}"
+                            class="text-success">
+
+                        Available
+
+                    </span>
+
+                </td>
+
+                <td>
+
+                    <a
+                            th:href="@{/inventory/view/{id}(id=${item.id})}"
+                            class="btn btn-sm btn-primary">
+
+                        View
+
+                    </a>
+
+                    <a
+                            th:href="@{/inventory/delete/{id}(id=${item.id})}"
+                            class="btn btn-sm btn-danger"
+                            onclick="return confirm('Delete this inventory item?');">
+
+                        Delete
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(items)}">
+
+                <td colspan="7"
+                    class="text-center text-muted">
+
+                    No inventory items found.
+
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
